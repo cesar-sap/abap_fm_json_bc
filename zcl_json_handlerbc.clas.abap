@@ -1221,6 +1221,8 @@ endmethod.
 
 method CALL_FUNCTION.
 
+* ready for Andy??
+
   data:
 *        funcname       type rs38l_fnam,
     etext        type string,
