@@ -1585,6 +1585,7 @@ method IF_HTTP_EXTENSION~HANDLE_REQUEST.
         proto          type string,
         http_code      type i,
         http_status    type string,
+        remote_dest    type string,
 
         funcname       type rs38l_fnam,
         funcname2      type string,
@@ -1637,6 +1638,7 @@ method IF_HTTP_EXTENSION~HANDLE_REQUEST.
   lowercase              = server->request->get_form_field( 'lowercase' ).
   format               = server->request->get_form_field( 'format' ).
   accept               = server->request->get_header_field( name = 'Accept' ).
+  remote_dest          = server->request->get_form_field( '$dest' ).
 
 * Try "$" equivalents:
   if format is initial.
@@ -1770,6 +1772,7 @@ call method me->call_function
     jsonp_callback     = jsonp_callback
     show_import_params = show_import_params
     lowercase          = lowercase
+    remote_system      = remote_dest
   importing
     output_data        = o_cdata
     .
