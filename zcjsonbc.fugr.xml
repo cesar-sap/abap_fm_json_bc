@@ -33,17 +33,31 @@
       </RSIMP>
       <RSIMP>
        <PARAMETER>SHOW_IMPORT_PARAMS</PARAMETER>
-       <TYP>STRING</TYP>
+       <TYP>XFELD</TYP>
       </RSIMP>
       <RSIMP>
        <PARAMETER>LOWERCASE</PARAMETER>
-       <TYP>STRING</TYP>
+       <TYP>XFELD</TYP>
       </RSIMP>
       <RSIMP>
        <PARAMETER>CAMELCASE</PARAMETER>
-       <TYP>STRING</TYP>
+       <TYP>XFELD</TYP>
       </RSIMP>
      </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>RESULTTAB_STR</PARAMETER>
+       <TYP>STRING</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>CONTENT_TYPE</PARAMETER>
+       <TYP>STRING</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>EXCEPTAB_STR</PARAMETER>
+       <TYP>STRING</TYP>
+      </RSEXP>
+     </EXPORT>
      <DOCUMENTATION>
       <RSFDO>
        <PARAMETER>PARAMTAB_STR</PARAMETER>
@@ -69,17 +83,35 @@
       <RSFDO>
        <PARAMETER>SHOW_IMPORT_PARAMS</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Checkbox</STEXT>
        <INDEX> 005</INDEX>
       </RSFDO>
       <RSFDO>
        <PARAMETER>LOWERCASE</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Checkbox</STEXT>
        <INDEX> 006</INDEX>
       </RSFDO>
       <RSFDO>
        <PARAMETER>CAMELCASE</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Checkbox</STEXT>
        <INDEX> 007</INDEX>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>RESULTTAB_STR</PARAMETER>
+       <KIND>P</KIND>
+       <INDEX> 008</INDEX>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>CONTENT_TYPE</PARAMETER>
+       <KIND>P</KIND>
+       <INDEX> 009</INDEX>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>EXCEPTAB_STR</PARAMETER>
+       <KIND>P</KIND>
+       <INDEX> 010</INDEX>
       </RSFDO>
      </DOCUMENTATION>
     </item>
