@@ -153,9 +153,9 @@ protected section.
 *"* protected components of class ZCL_JSON_HANDLERBC
 *"* do not include other source files here!!!
 private section.
+
 *"* private components of class ZCL_JSON_HANDLERBC
 *"* do not include other source files here!!!
-
   data SERVER type ref to IF_HTTP_SERVER .
 
   methods CALL_FUNCTION
@@ -177,7 +177,9 @@ private section.
     importing
       !HTTP_CODE type STRING
       !STATUS_TEXT type STRING optional
-      !MESSAGE type STRING optional .
+      !MESSAGE type STRING optional
+    returning
+      value(OUTPUT_TEXT) type STRING .
 ENDCLASS.
 
 
@@ -1255,11 +1257,23 @@ method CALL_FUNCTION.
         JSONP_CALLBACK     = jsonp_callback
         SHOW_IMPORT_PARAMS = show_import_params
         LOWERCASE          = lowercase
-*       CAMELCASE          = camelcase
+*        CAMELCASE          = camelcase
       IMPORTING
         RESULTTAB_STR      = output_data
-        CONTENT_TYPE       = ret_ctype.
+        CONTENT_TYPE       = ret_ctype
+        ERROR_TEXT         = etext
+        X_SAPRFC_EXCEPTION = exceptheader.
 
+     me->server->response->set_header_field( name = 'Content-Type' value = ret_ctype ).
+     if exceptheader is not initial.
+        call method me->server->response->set_header_field(
+          name  = 'X-SAPRFC-Exception'
+          value = exceptheader ).
+     endif.
+     if etext is not initial.
+        output_data = me->http_error( http_code = '500' status_text = 'Internal Server Error'  message = etext ).
+        exit.
+     endif.
 
   else.
 
@@ -1280,7 +1294,8 @@ method CALL_FUNCTION.
       concatenate 'Invalid Function. ' sy-msgid sy-msgty sy-msgno ': '
               sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4
               into etext separated by '-'.
-*    http_error '500' 'Server Error' etext.
+      me->http_error( http_code = '500' status_text = 'Internal Server Error'  message = etext ).
+      exit.
     endif.
 
 
@@ -1299,8 +1314,7 @@ method CALL_FUNCTION.
       catch cx_root into oexcp.
 
         etext = oexcp->if_message~get_text( ).
-
-*      http_error '500' 'Internal Server Error' etext.
+        me->http_error( http_code = '500' status_text = 'Internal Server Error'  message = etext ).
 
     endtry.
 */**********************************/*
@@ -1539,6 +1553,7 @@ endmethod.
     me->server->response->set_status( code = code  reason = status_text ).
     concatenate '{"ERROR_CODE":"' http_code '","ERROR_MESSAGE":"' message '","INFO_LINK":"' me->my_url me->my_service '?action=notes"}' into etext.
     me->server->response->set_cdata( etext ).
+    output_text = etext.
     exit.
 
 
