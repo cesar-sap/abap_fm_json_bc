@@ -12,7 +12,10 @@ FUNCTION ZRFC_GENERIC_CALL.
 *"  EXPORTING
 *"     VALUE(RESULTTAB_STR) TYPE  STRING
 *"     VALUE(CONTENT_TYPE) TYPE  STRING
-*"     VALUE(EXCEPTAB_STR) TYPE  STRING
+*"     VALUE(ERROR_TEXT) TYPE  STRING
+*"     VALUE(X_SAPRFC_EXCEPTION) TYPE  STRING
+*"  EXCEPTIONS
+*"      INVALID_FUNCTION
 *"----------------------------------------------------------------------
 
 
@@ -31,7 +34,6 @@ data:
     oexcp        type ref to cx_root.
 
   field-symbols <fm_param> type abap_func_parmbind.
-  field-symbols <fm_int_handler> type zicf_handler_data.
 
 
 * Prepare params to call function
@@ -50,9 +52,7 @@ data:
       concatenate 'Invalid Function. ' sy-msgid sy-msgty sy-msgno ': '
               sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4
               into etext separated by '-'.
-*    http_error '500' 'Server Error' etext.
     endif.
-
 
 
 **********************
@@ -69,8 +69,6 @@ data:
       catch cx_root into oexcp.
 
         etext = oexcp->if_message~get_text( ).
-
-*      http_error '500' 'Internal Server Error' etext.
 
     endtry.
 */**********************************/*
@@ -93,8 +91,6 @@ data:
 
         etext = oexcp->if_message~get_longtext(  preserve_newlines = abap_true ).
 
-*       me->http_error( http_code = '500' status_text = 'Internal Server Error'  message = etext ).
-
     endtry.
 
 
@@ -103,8 +99,7 @@ data:
     delete exceptab where value ne funcrc.
     read table exceptab into exception with key value = funcrc.
     if sy-subrc eq 0.
-      exceptheader = exception-name.
-*      call method me->server->response->set_header_field( name  = 'X-SAPRFC-Exception' value = exceptheader ).
+      X_SAPRFC_EXCEPTION = exception-name.
     endif.
 
 
@@ -185,6 +180,7 @@ data:
     endcase.
 
 
+  error_text = etext.
 
 
 

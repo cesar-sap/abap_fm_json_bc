@@ -54,10 +54,19 @@
        <TYP>STRING</TYP>
       </RSEXP>
       <RSEXP>
-       <PARAMETER>EXCEPTAB_STR</PARAMETER>
+       <PARAMETER>ERROR_TEXT</PARAMETER>
+       <TYP>STRING</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>X_SAPRFC_EXCEPTION</PARAMETER>
        <TYP>STRING</TYP>
       </RSEXP>
      </EXPORT>
+     <EXCEPTION>
+      <RSEXC>
+       <EXCEPTION>INVALID_FUNCTION</EXCEPTION>
+      </RSEXC>
+     </EXCEPTION>
      <DOCUMENTATION>
       <RSFDO>
        <PARAMETER>PARAMTAB_STR</PARAMETER>
@@ -109,9 +118,20 @@
        <INDEX> 009</INDEX>
       </RSFDO>
       <RSFDO>
-       <PARAMETER>EXCEPTAB_STR</PARAMETER>
+       <PARAMETER>ERROR_TEXT</PARAMETER>
        <KIND>P</KIND>
        <INDEX> 010</INDEX>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>X_SAPRFC_EXCEPTION</PARAMETER>
+       <KIND>P</KIND>
+       <INDEX> 011</INDEX>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>INVALID_FUNCTION</PARAMETER>
+       <KIND>X</KIND>
+       <STEXT>Probably the function does not exist</STEXT>
+       <INDEX> 012</INDEX>
       </RSFDO>
      </DOCUMENTATION>
     </item>
