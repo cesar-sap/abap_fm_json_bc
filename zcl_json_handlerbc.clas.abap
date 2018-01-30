@@ -74,14 +74,14 @@ public section.
       !JS_OBJECT type ref to CL_JAVA_SCRIPT optional
       value(ABAP_DATA) type ANY optional
     raising
-      ZCX_JSON .
+      ZCX_JSON_BC .
   class-methods JSON_DESERIALIZE
     importing
       !JSON type STRING
     changing
       !PARAMTAB type ABAP_FUNC_PARMBIND_TAB
     raising
-      ZCX_JSON .
+      ZCX_JSON_BC .
   methods NOTES
     returning
       value(TEXT) type STRING .
@@ -134,7 +134,7 @@ public section.
     changing
       !PARAMTAB type ABAP_FUNC_PARMBIND_TAB
     raising
-      ZCX_JSON .
+      ZCX_JSON_BC .
   class-methods SERIALIZE_ID
     importing
       !PARAMTAB type ABAP_FUNC_PARMBIND_TAB
@@ -148,7 +148,7 @@ public section.
     exporting
       !O_STRING type STRING
     raising
-      ZCX_JSON .
+      ZCX_JSON_BC .
 protected section.
 *"* protected components of class ZCL_JSON_HANDLERBC
 *"* do not include other source files here!!!
@@ -168,6 +168,7 @@ private section.
       !SHOW_IMPORT_PARAMS type ABAP_BOOL default ABAP_FALSE
       !LOWERCASE type ABAP_BOOL default ABAP_FALSE
       !REMOTE_SYSTEM type STRING optional
+      !CAMELCASE type ABAP_BOOL optional
     exporting
       !OUTPUT_DATA type STRING .
   methods RUN_BATCH
@@ -1240,7 +1241,7 @@ method CALL_FUNCTION.
     oexcp        type ref to cx_root.
 
   field-symbols <fm_param> type abap_func_parmbind.
-  field-symbols <fm_int_handler> type zicf_handler_data.
+  field-symbols <fm_int_handler> type zicf_handler_data_bc.
 
 
 *****
@@ -1329,7 +1330,7 @@ method CALL_FUNCTION.
 */************************************************/*
     read table paramtab with key name = '_ICF_DATA' assigning <fm_param>.
     if sy-subrc eq 0.
-      create data <fm_param>-value type zicf_handler_data.
+      create data <fm_param>-value type zicf_handler_data_bc.
       assign <fm_param>-value->* to <fm_int_handler>.
       <fm_int_handler>-request_method = me->server->request->get_header_field( name = '~request_method' ).
       <fm_int_handler>-icf_url = me->my_url.
@@ -1533,7 +1534,7 @@ method DESERIALIZE_ID.
     catch cx_root into oexcp.
 
       etext = oexcp->if_message~get_text( ).
-      RAISE EXCEPTION type zcx_json
+      RAISE EXCEPTION type zcx_json_bc
         EXPORTING
           message = etext.
 
@@ -1619,7 +1620,6 @@ method IF_HTTP_EXTENSION~HANDLE_REQUEST.
   field-symbols <fm_param> type abap_func_parmbind.
   field-symbols <fm_value_str> type string.
   field-symbols <fm_value_i> type i.
-  field-symbols <fm_int_handler> type ZICF_HANDLER_DATA.
 
 
 * Get Server Info:
@@ -1733,7 +1733,7 @@ method IF_HTTP_EXTENSION~HANDLE_REQUEST.
 
 * Check Authorization. Create the relevant auth object in SU21 and assign
 * the authorized functions to the user. Uncomment to implement security.
-  authority-check object 'Z_JSON'
+  authority-check object 'Z_JSON_BC'
          id 'FMNAME' field funcname.
   if sy-subrc ne 0.
     http_error( exporting http_code = '403' status_text = 'Not authorized' message = 'You are not authorized to invoke this function module.' ).
@@ -1937,7 +1937,7 @@ method JSON2ABAP.
     js_object->execute( script_name = 'json_parser' ).
 
     if js_object->last_error_message is not initial.
-      RAISE EXCEPTION type zcx_json
+      RAISE EXCEPTION type zcx_json_bc
         EXPORTING
           message = js_object->last_error_message.
     endif.
@@ -1974,7 +1974,7 @@ method JSON2ABAP.
     when cl_abap_typedescr=>kind_elem.
 * Scalar: process ABAP elements. Assume no type conversions for the moment.
       if var_name is initial.
-        RAISE EXCEPTION type zcx_json
+        RAISE EXCEPTION type zcx_json_bc
           EXPORTING
             message = 'VAR_NAME is required for scalar values.'.
       endif.
@@ -2227,7 +2227,7 @@ method SERIALIZE_ID.
     catch cx_root into oexcp.
 
       etext = oexcp->if_message~get_text( ).
-      RAISE EXCEPTION type zcx_json
+      RAISE EXCEPTION type zcx_json_bc
         EXPORTING
           message = etext.
 
